@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import Layout from "../../components/Layout";
 
 function EventsPage() {
-  return (
-    <div>My Events</div>
-  )
+  return <Layout>My Events</Layout>;
 }
 
-export default EventsPage
+export default EventsPage;
