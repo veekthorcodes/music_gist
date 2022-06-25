@@ -1,0 +1,8 @@
+.error {
+    text-align: center;
+    margin: 100px 0 200px
+}
+
+.error h1, .icon {
+    font-size: 60px;
+}
