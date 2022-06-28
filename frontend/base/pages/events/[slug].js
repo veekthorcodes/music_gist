@@ -1,12 +1,78 @@
-import React from 'react'
-import Layout from '@/components/Layout'
+import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
-function EventPage() {
+import Layout from "@/components/Layout";
+import { API_URL } from "@/config/index";
+import styles from "@/styles/Event.module.css";
+
+function EventPage({ event }) {
+  const deleteEvent = async () => {
+    console.log("deleteEvent");
+  }; 
+
   return (
     <Layout>
-      <h1>My Event</h1>
+      <div className={styles.event}>
+        <div className={styles.controls}>
+          <Link href={`/events/edit/${event.id}`}>
+            <a>
+              <FaPencilAlt /> Edit
+            </a>
+          </Link>
+          <a href="" className={styles.delete} onClick={deleteEvent}>
+              <FaTimes /> Delete
+            </a>
+        </div>
+
+        <span>
+          {event.date} at {event.time}
+        </span>
+        <h1>{event.name}</h1>
+        {event.image && (
+          <div className={styles.img}>
+            <Image src={event.image} width={960} height={500}/>
+          </div>
+        )}
+
+        <h3>Performers:</h3>
+        <p>{event.performers}</p>
+        <h3>Description:</h3>
+        {<p>{event.descriptioin}</p> && 'no description'}
+        <h3>Venue: {event.venue}</h3>
+        <p>Location: {event.address}</p>
+
+        <Link href={'/events'}>
+          <a className={styles.back}>{'<'} Go Back</a>
+        </Link>
+      </div>
     </Layout>
-  )
+  );
 }
 
-export default EventPage
+export async function getStaticPaths() {
+  const res = await fetch(`${API_URL}/api/events/`);
+
+  const events = await res.json();
+
+  const paths = events.map((evt) => ({
+    params: { slug: evt.slug },
+  }));
+
+  return {
+    paths,
+    fallback: true,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(`${API_URL}/api/events/${params.slug}/`);
+  const event = await res.json();
+
+  return {
+    props: { event },
+  };
+}
+
+export default EventPage;

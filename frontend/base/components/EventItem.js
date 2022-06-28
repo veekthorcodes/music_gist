@@ -9,10 +9,10 @@ function EventItem({ event }) {
     <div className={styles.event}>
       <div className={styles.img}>
         <Image
-          loader={() => event.image}
+          // loader={() => event.image}
           src={event.image ? event.image : "/images/event-default.png"}
           alt={event.name}
-          width={170}
+          width={180}
           height={100}
         />
       </div>

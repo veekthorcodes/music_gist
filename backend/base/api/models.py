@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
+from django.conf import settings
 
 
 class Event(models.Model):
@@ -16,7 +17,11 @@ class Event(models.Model):
     date = models.DateField()
     time = models.CharField(max_length=255)
     description = models.TextField()
-    image = CloudinaryField('image')
+    image = CloudinaryField('Image', overwrite=True, resource_type="image", transformation={
+                            "quality": "auto:eco"}, format="jpg")
+
+    def get_image_url(self):
+        return self.image.url
 
     def __str__(self):
         return self.name
