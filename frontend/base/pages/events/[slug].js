@@ -10,11 +10,14 @@ import styles from "@/styles/Event.module.css";
 function EventPage({ event }) {
   const deleteEvent = async () => {
     console.log("deleteEvent");
-  }; 
+  };
 
   return (
     <Layout>
       <div className={styles.event}>
+      <Link href={"/events"}>
+          <a className={styles.back}>{"<"} Go Back</a>
+        </Link>
         <div className={styles.controls}>
           <Link href={`/events/edit/${event.id}`}>
             <a>
@@ -22,30 +25,28 @@ function EventPage({ event }) {
             </a>
           </Link>
           <a href="" className={styles.delete} onClick={deleteEvent}>
-              <FaTimes /> Delete
-            </a>
+            <FaTimes /> Delete
+          </a>
         </div>
 
         <span>
           {event.date} at {event.time}
         </span>
         <h1>{event.name}</h1>
-        {event.image && (
+        {event.image ? (
           <div className={styles.img}>
-            <Image src={event.image} width={960} height={500}/>
+            <Image src={event.image} width={960} height={500} />
           </div>
+        ) : (
+          <p>No Image Added</p>
         )}
 
         <h3>Performers:</h3>
         <p>{event.performers}</p>
         <h3>Description:</h3>
-        {<p>{event.descriptioin}</p> && 'no description'}
+        {<p>{event.descriptioin}</p> && "no description"}
         <h3>Venue: {event.venue}</h3>
         <p>Location: {event.address}</p>
-
-        <Link href={'/events'}>
-          <a className={styles.back}>{'<'} Go Back</a>
-        </Link>
       </div>
     </Layout>
   );

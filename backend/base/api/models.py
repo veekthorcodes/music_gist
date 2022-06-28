@@ -8,8 +8,9 @@ from django.conf import settings
 
 
 class Event(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, null=True, blank=True)
     venue = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -18,10 +19,11 @@ class Event(models.Model):
     time = models.CharField(max_length=255)
     description = models.TextField()
     image = CloudinaryField('Image', overwrite=True, resource_type="image", transformation={
-                            "quality": "auto:eco"}, format="jpg")
+                            "quality": "auto:eco"}, format="jpg", blank=True, null=True)
 
     def get_image_url(self):
-        return self.image.url
+        if self.image:
+            return self.image.url
 
     def __str__(self):
         return self.name
