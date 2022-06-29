@@ -9,16 +9,17 @@ import Layout from "@/components/Layout";
 import Form from "@/components/Form";
 import { API_URL } from "@/config/index";
 
-function AddEventPage() {
+function EditEventPage({ event }) {
   const router = useRouter();
   const [values, setValues] = useState({
-    name: "",
-    performers: "",
-    venue: "",
-    address: "",
-    date: "",
-    time: "",
-    description: "",
+    name: event.name,
+    performers: event.performers,
+    venue: event.venue,
+    address: event.address,
+    date: event.date,
+    time: event.time,
+    description: event.description,
+    slug: event.slug
   });
 
   const handleInputChange = (e) => {
@@ -35,8 +36,8 @@ function AddEventPage() {
       return;
     }
 
-    const res = await fetch(`${API_URL}/api/events/create/`, {
-      method: "POST",
+    const res = await fetch(`${API_URL}/api/events/${values.slug}/update/`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -47,26 +48,37 @@ function AddEventPage() {
     if (!res.ok) {
       toast.error("Something went wrong");
     } else {
-      toast.success("Event added successfully");
+      toast.success("Event updated successfully");
       router.push(`/events/${event.slug}`);
     }
   };
 
   return (
-    <Layout title="Add New Event">
+    <Layout title="Edit Event">
       <Link href={"/events"}>
         <a>{"<"} Go back</a>
       </Link>
       <ToastContainer />
-      <h1>Add Event</h1>
+      <h1>Edit Event</h1>
       <Form
         handleInputChage={handleInputChange}
         handleSubmit={handleSubmit}
+        btnTitle={"Update Event"}
         values={values}
-        btnTitle="Add Event"
       />
     </Layout>
   );
 }
 
-export default AddEventPage;
+export async function getServerSideProps({ params }) {
+  const res = await fetch(`${API_URL}/api/events/${params.slug}/`);
+  const event = await res.json();
+  console.log(event)
+  return {
+    props: {
+      event,
+    },
+  };
+}
+
+export default EditEventPage;

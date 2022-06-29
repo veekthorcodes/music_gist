@@ -37,7 +37,7 @@ function EventPage({ event }) {
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
         <div className={styles.controls}>
-          <Link href={`/events/edit/${event.id}`}>
+          <Link href={`/events/edit/${event.slug}`}>
             <a>
               <FaPencilAlt /> Edit
             </a>
@@ -90,6 +90,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  // console.log(params)
   const res = await fetch(`${API_URL}/api/events/${params.slug}/`);
   const event = await res.json();
 
