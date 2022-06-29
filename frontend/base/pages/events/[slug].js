@@ -1,21 +1,39 @@
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Event.module.css";
 
 function EventPage({ event }) {
-  const deleteEvent = async () => {
-    console.log("deleteEvent");
+  const router = useRouter();
+
+  const deleteEvent = async (e) => {
+    if (confirm("Are you sure?")) {
+      const res = await fetch(`${API_URL}/api/events/${event.id}/delete/`, {
+        method: "delete",
+      });
+
+      if (!res.ok) {
+        toast.error("Something went wrong");
+      } else {
+        toast.success("Event deleted");
+      }
+    }
+
+    router.push("/");
   };
 
   return (
     <Layout>
+      <ToastContainer />
       <div className={styles.event}>
-      <Link href={"/events"}>
+        <Link href={"/events"}>
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
         <div className={styles.controls}>
@@ -24,7 +42,11 @@ function EventPage({ event }) {
               <FaPencilAlt /> Edit
             </a>
           </Link>
-          <a href="" className={styles.delete} onClick={deleteEvent}>
+          <a
+            style={{ cursor: "pointer" }}
+            className={styles.delete}
+            onClick={deleteEvent}
+          >
             <FaTimes /> Delete
           </a>
         </div>

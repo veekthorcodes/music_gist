@@ -42,11 +42,11 @@ function AddEventPage() {
       },
       body: JSON.stringify(values),
     });
-
+    const event = await res.json()
+    
     if (!res.ok) {
       toast.error("Something went wrong");
     } else {
-      const event = await res.json()
       toast.success("Event added successfully");
       router.push(`/events/${event.slug}`);
     }
